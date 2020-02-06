@@ -1,0 +1,51 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+h4 {
+  font-size: 17px;
+  color: blue;
+}
+
+.split-form {
+  border: #282c34 solid 1px;
+  width: 250px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.form-contents {
+  display: inline-grid;
+  margin-bottom: 10px !important;
+}
+
+.form-control {
+  margin-bottom: 20px;
+}
+
+.split-form {
+  margin-bottom: 10px;
+}
+
+.split-form:hover {
+  box-shadow: 0 0 18px rgba(0,0,0,0.3);
+}
