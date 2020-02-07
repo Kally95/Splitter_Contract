@@ -13,7 +13,9 @@ class App extends Component {
       contract: null,
       amount: 0,
       recipient1: null,
-      recipient2: null
+      recipient2: null,
+      recipient1Bal: 0,
+      recipient2Bal:0
     }
   }
 
@@ -65,13 +67,27 @@ class App extends Component {
     }
   }
 
+  handleRecipient1Bal = async () => {
+    let { accounts, contract, recipient1Bal, recipient1 } = this.state;
+    let balance = await contract.methods.balances(
+      recipient1,
+      {from: accounts[0]}
+    )
+    this.setState({ recipient1Bal: balance })
+  }
+
+  // handleRecipient1Bal = async () => {
+    
+  // }
+
   render() {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
       <div className="App">  
-      <h1>Splitter</h1>
+        <h1>Splitter</h1>
+        <p>Recip1 Bal: { this.state.recipient1Bal } </p>
         <form className="split-form">
         <h4>Split Form</h4>
         <hr></hr>

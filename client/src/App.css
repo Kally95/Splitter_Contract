@@ -49,3 +49,13 @@ h4 {
 .split-form:hover {
   box-shadow: 0 0 18px rgba(0,0,0,0.3);
 }
+
+.buttons-container {
+  display: inline-grid;
+
+}
+
+.withdraw-bt {
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
