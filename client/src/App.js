@@ -15,7 +15,8 @@ class App extends Component {
       recipient1: null,
       recipient2: null,
       recipient1Bal: 0,
-      recipient2Bal:0
+      recipient2Bal:0,
+      withdrawAmt: 0
     }
   }
 
@@ -67,14 +68,23 @@ class App extends Component {
     }
   }
 
-  handleRecipient1Bal = async () => {
-    let { accounts, contract, recipient1Bal, recipient1 } = this.state;
-    let balance = await contract.methods.balances(
-      recipient1,
-      {from: accounts[0]}
-    )
-    this.setState({ recipient1Bal: balance })
+  handleWithdraw = async () => {
+    let { accounts, contract, withdrawAmount, web3 } = this.state;
+    let withdrawAmt = web3.utils.toWei(withdrawAmount, 'ether')
+    await contract.methods.withdraw(
+      withdrawAmt
+    ).send({
+      from: accounts[0]
+    })
   }
+  // handleRecipient1Bal = async () => {
+  //   let { accounts, contract, recipient1Bal, recipient1 } = this.state;
+  //   let balance = await contract.methods.balances(
+  //     recipient1,
+  //     {from: accounts[0]}
+  //   )
+  //   this.setState({ recipient1Bal: balance })
+  // }
 
   // handleRecipient1Bal = async () => {
     
@@ -118,9 +128,20 @@ class App extends Component {
           />
         </div>
         </form>
-        <button onClick={this.handleSplit} variant="contained" color="primary">
+        <button onClick={this.handleSplit}>
         Split
         </button>
+
+        <button onClick={this.handleWithdraw}>
+          Withdraw
+        </button>
+        <input 
+          autoComplete="off"
+          name="withdrawAmt"
+          className="form-control"
+          id="withdrawAmt"
+          onChange={this.handleInput}
+        />
     </div>
     );
   }
