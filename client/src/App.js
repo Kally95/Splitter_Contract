@@ -67,7 +67,7 @@ class App extends Component {
       ).send({
       from: accounts[0],
       value: ethAmount,
-      gas: "25000"
+      
       })
     } catch(err) {
       console.log(err)
@@ -82,7 +82,7 @@ class App extends Component {
       .withdraw(amount)
       .send({
       from: accounts[0],
-      gas: "25000"
+      
     });
   }
 
