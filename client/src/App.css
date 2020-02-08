@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  font-family: 'Work Sans', sans-serif;
 }
 
 .App-logo {
@@ -22,15 +23,19 @@
 }
 
 h4 {
-  font-size: 17px;
-  color: blue;
+  font-size: 17px;  
 }
 
 .split-form {
-  border: #282c34 solid 1px;
+  border: #282c34 dotted 2px;
   width: 250px;
   margin: 0 auto;
   padding: 10px;
+}
+#withdrawAmt {
+  width: 200px;
+  margin: 0 auto;
+  
 }
 
 .form-contents {
@@ -51,11 +56,18 @@ h4 {
 }
 
 .buttons-container {
-  display: inline-grid;
-
+  width: 199px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  
 }
 
 .withdraw-bt {
   margin-top: 15px;
   margin-bottom: 5px;
+}
+
+.btn {
+  margin-bottom: 10px;
 }

@@ -43,7 +43,7 @@ class App extends Component {
         web3, accounts, contract: instance, address: deployedNetwork.address }, () => {
         this.handleContractBalance();
       });
-      console.log(web3)
+     
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -76,13 +76,14 @@ class App extends Component {
 
   handleWithdraw = async () => {
     let { accounts, contract, web3, withdrawAmt } = this.state;
-    let withdrawAmount = web3.utils.fromWei(withdrawAmt);
-    await contract.methods.withdraw(
-      withdrawAmount
-    ).send({
+    let amount = web3.utils.toWei(withdrawAmt, "ether");
+    console.log(amount)
+    await contract.methods
+      .withdraw(amount)
+      .send({
       from: accounts[0],
       gas: "25000"
-    })
+    });
   }
 
   handleContractBalance = async () => {
@@ -91,7 +92,6 @@ class App extends Component {
       address
     );
     let contractBalance = web3.utils.fromWei(balance, 'ether');
-    console.log(balance)
     this.setState({ contractBal: contractBalance});
   }
   
@@ -101,8 +101,8 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <h1>Splitter</h1>
-        <p>Contract Balance: {this.state.contractBal} ETH </p>
+        <h1><u>SPLITTER</u></h1>
+        <p>Contract Balance: <span class="badge badge-secondary">{this.state.contractBal}</span> ETH </p>
         <form className="split-form">
         <h4>Split Form</h4>
         <hr></hr>
@@ -133,20 +133,30 @@ class App extends Component {
           />
         </div>
         </form>
-        <button onClick={this.handleSplit}>
-        Split
-        </button>
 
-        <button onClick={this.handleWithdraw}>
-          Withdraw
-        </button>
-        <input 
-          autoComplete="off"
-          name="withdrawAmt"
-          className="form-control"
-          id="withdrawAmt"
-          onChange={this.handleInput}
-        />
+        <div className="buttons-container">
+          <button 
+          className="btn btn-primary"
+          onClick={this.handleSplit}>
+          SPLIT ✂️
+          </button>
+
+          <button 
+          htmlFor="withdrawAmt"
+          className="btn btn-success"
+          onClick={this.handleWithdraw}>
+            WITHDRAW 💰
+          </button>
+
+          <input 
+            autoComplete="off"
+            name="withdrawAmt"
+            className="form-control"
+            id="withdrawAmt"
+            onChange={this.handleInput}
+          />
+        </div>
+
     </div>
     );
   }
