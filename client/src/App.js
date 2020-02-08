@@ -9,14 +9,16 @@ class App extends Component {
     super(props)
     this.state = { 
       web3: null,
+      address: null,
       accounts: null,
       contract: null,
       amount: 0,
       recipient1: null,
       recipient2: null,
-      recipient1Bal: 0,
-      recipient2Bal:0,
-      withdrawAmt: 0
+      // recipient1Bal: 0,
+      // recipient2Bal:0,
+      withdrawAmt: 0,
+      contractBal: 0  
     }
   }
 
@@ -35,10 +37,13 @@ class App extends Component {
         Splitter.abi,
         deployedNetwork && deployedNetwork.address,
       );
-
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
+      this.setState({ 
+        web3, accounts, contract: instance, address: deployedNetwork.address }, () => {
+        this.handleContractBalance();
+      });
+      console.log(web3)
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -61,7 +66,8 @@ class App extends Component {
         recipient2
       ).send({
       from: accounts[0],
-      value: ethAmount
+      value: ethAmount,
+      gas: "25000"
       })
     } catch(err) {
       console.log(err)
@@ -69,35 +75,34 @@ class App extends Component {
   }
 
   handleWithdraw = async () => {
-    let { accounts, contract, withdrawAmount, web3 } = this.state;
-    let withdrawAmt = web3.utils.toWei(withdrawAmount, 'ether')
+    let { accounts, contract, web3, withdrawAmt } = this.state;
+    let withdrawAmount = web3.utils.fromWei(withdrawAmt);
     await contract.methods.withdraw(
-      withdrawAmt
+      withdrawAmount
     ).send({
-      from: accounts[0]
+      from: accounts[0],
+      gas: "25000"
     })
   }
-  // handleRecipient1Bal = async () => {
-  //   let { accounts, contract, recipient1Bal, recipient1 } = this.state;
-  //   let balance = await contract.methods.balances(
-  //     recipient1,
-  //     {from: accounts[0]}
-  //   )
-  //   this.setState({ recipient1Bal: balance })
-  // }
 
-  // handleRecipient1Bal = async () => {
-    
-  // }
-
+  handleContractBalance = async () => {
+    let { web3, address } = this.state;
+    let balance = await web3.eth.getBalance(
+      address
+    );
+    let contractBalance = web3.utils.fromWei(balance, 'ether');
+    console.log(balance)
+    this.setState({ contractBal: contractBalance});
+  }
+  
   render() {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
-      <div className="App">  
+      <div className="App">
         <h1>Splitter</h1>
-        <p>Recip1 Bal: { this.state.recipient1Bal } </p>
+        <p>Contract Balance: {this.state.contractBal} ETH </p>
         <form className="split-form">
         <h4>Split Form</h4>
         <hr></hr>
