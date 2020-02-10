@@ -1,5 +1,4 @@
 const Splitter = artifacts.require('Splitter')
-// const BN = require('BN.js');
 const utils = require("./helpers/utils");
 
 contract("Splitter", (accounts) => {
@@ -131,15 +130,6 @@ contract("Splitter", (accounts) => {
     }) 
 
     it("Should split multiple amongst Bob & Carol with txFee's taken into consideration", async () => {
-      let hash;
-      let gasUsed = 0;
-      let gasPrice = 0;
-      let txFee = 0;
-      let receiveAmount = 0;
-      let balanceBefore;
-      let balanceNow;
-      let startBalance;
-      const sendAmount = 1000;
 
       startBalance = new BN(await web3.eth.getBalance(recipient1));
 
@@ -152,7 +142,7 @@ contract("Splitter", (accounts) => {
       const tx = await web3.eth.getTransaction(hash); //Returns a transaction matching the given transaction hash.
       gasUsed = txObj.receipt.gasUsed;
       gasPrice = tx.gasPrice;
-      txFee = gasUsed.mul(gasPrice);
+      txFee = new BN(gasUsed * gasPrice);
       balanceNow = new BN(await web3.eth.getBalance(recipient1));        
       receiveAmount = sendAmount.div(2);
 
