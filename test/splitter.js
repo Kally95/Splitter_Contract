@@ -113,11 +113,11 @@ contract("Splitter", (accounts) => {
 
     it("Should emit an event when withdraw is called", async () => {
       await contractInstance.split(recipient1, recipient2, {from: owner, value: amount});
-      const result = await contractInstance.withdraw("500", {from: recipient1});
+      const result = await contractInstance.withdraw("499", {from: recipient1});
       assert.strictEqual(result.receipt.logs[0].event, "LogWithdrawCalled", "Withdraw event did not fire");
       assert.strictEqual(result.receipt.logs[0].args.__length__, 2, "Withdraw should have emitted one event");
       assert.strictEqual(result.receipt.logs[0].args._withdrawer, recipient1, "recipient1 was not the withdrawer");
-      assert.strictEqual(result.receipt.logs[0].args._withdrawAmount.toString(10), "500", "Did not withdraw the correct amount");
+      assert.strictEqual(result.receipt.logs[0].args._withdrawAmount.toString(10), "499", "Did not withdraw the correct amount");
     });
 
   });

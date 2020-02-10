@@ -8,7 +8,7 @@ contract Stoppable is Ownable {
     bool private stopped;
     bool private killed;
 
-    event LogStopped(address _owner); 
+    event LogStopped(address _owner);
     event LogResumed(address _owner);
     event LogKilled(address _killer);
     

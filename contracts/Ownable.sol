@@ -2,9 +2,9 @@ pragma solidity ^0.5.0;
 
 contract Ownable {
     
-    address private owner; // **implemented** made as payable to replace owner in Splitter contract
+    address private owner;
   
-    event OwnershipTransferred(address newOwner); // Added event
+    event OwnershipTransferred(address indexed newOwner, address indexed previousOwner); 
     
     constructor() public
     {
@@ -25,13 +25,13 @@ contract Ownable {
     }
     
     function
-    setOwner(address newOwner) // **implemented** declared input paramater as payable
+    setOwner(address newOwner)
     public
     onlyOwner
     returns(bool success)
     {
         require(newOwner != address(0x0), "Error: Address cannot be 0");
-        emit OwnershipTransferred(newOwner); //<-***implemented*** added emit
+        emit OwnershipTransferred(newOwner, msg.sender); 
         owner = newOwner;
         return true; 
     }
