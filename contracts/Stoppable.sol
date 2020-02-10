@@ -8,15 +8,14 @@ contract Stoppable is Ownable {
     bool private stopped;
     bool private killed;
 
-    event LogStopped(address _owner); //<-***implemented*** Changed name of event
+    event LogStopped(address _owner); 
     event LogResumed(address _owner);
     event LogKilled(address _killer);
     
     constructor()
     internal
     {
-        stopped = false;
-        killed = false;
+
     }
     
     modifier
@@ -36,14 +35,14 @@ contract Stoppable is Ownable {
     modifier 
     whenRunning()
     { 
-        require(!stopped, "Contract is paused."); // _stopped = true -> !true
+        require(!stopped, "Contract is paused.");
         _;
     }
     
     modifier 
     whenPaused()
     {
-        require(stopped, "Contract is running"); //<-***implemented*** 
+        require(stopped, "Contract is running"); 
         _; 
     }
    
@@ -51,28 +50,27 @@ contract Stoppable is Ownable {
     public
     onlyOwner
     whenAlive
-    whenRunning //<-***implemented*** changed to 'whenRunning'
+    whenRunning 
     {
         stopped = true;
-        emit LogStopped(msg.sender); // Added emit
+        emit LogStopped(msg.sender);
     }
 
     function resume()
     public
     onlyOwner
     whenAlive
-    whenPaused //<-***implemented*** can only resume whenPaused
+    whenPaused
     {
         stopped = false;
-        emit LogResumed(msg.sender); // Added emit 
+        emit LogResumed(msg.sender);
     }
 
     function kill()
     public
     onlyOwner
     whenAlive
-    whenPaused // Requires contrac to be paused
-    //before it can be killed
+    whenPaused 
     {
         killed = true;
         emit LogKilled(msg.sender);
