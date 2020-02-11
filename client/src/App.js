@@ -18,7 +18,7 @@ class App extends Component {
       // recipient1Bal: 0,
       // recipient2Bal:0,
       withdrawAmt: 0,
-      contractBal: 0  
+      contractBal: 0
     }
   }
 
@@ -67,8 +67,11 @@ class App extends Component {
       ).send({
       from: accounts[0],
       value: ethAmount,
-      
+      gas: "21000"
       })
+      // .once('receipt', (receipt) => {
+      //   this.setState({ loading: false})
+      // })
     } catch(err) {
       console.log(err)
     }
@@ -82,7 +85,7 @@ class App extends Component {
       .withdraw(amount)
       .send({
       from: accounts[0],
-      
+      gas: "21000"
     });
   }
 
@@ -99,6 +102,7 @@ class App extends Component {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
+    
     return (
       <div className="App">
         <h1><u>SPLITTER</u></h1>
