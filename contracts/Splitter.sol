@@ -26,6 +26,7 @@ contract Splitter is Stoppable {
     payable
     whenRunning
     whenAlive
+    returns(bool)
     {
       require(recipient1 != address(0x0) && recipient2 != address(0x0), "Error: Address cannot be 0");
       require(msg.value > 0, "Error: Value can not equal 0");
@@ -33,13 +34,14 @@ contract Splitter is Stoppable {
 
         if(msg.value % 2 != 0){
             msg.value.sub(1);
-            balances[msg.sender] = balances[msg.sender].add(1); // Used SafeMath
+            balances[msg.sender] = balances[msg.sender].add(1); 
         }
 
         uint256 splitAmount = msg.value.div(2);
         balances[recipient1] = balances[recipient1].add(splitAmount);
-        balances[recipient2] = balances[recipient2].add(splitAmount); //
+        balances[recipient2] = balances[recipient2].add(splitAmount); 
         emit LogSplit(msg.sender);
+        return true;
     }
 
 

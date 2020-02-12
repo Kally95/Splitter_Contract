@@ -16,6 +16,7 @@ class App extends Component {
       recipient1: null,
       recipient2: null,
       txReceipt: '',
+      txHash: '',
       withdrawAmt: 0,
       contractBal: 0
     }
@@ -58,21 +59,36 @@ class App extends Component {
 
   handleSplit = async () => {
     let { accounts, contract, recipient1, recipient2, amount, web3 } = this.state;
-    const ethAmount = web3.utils.toWei(amount);
+    const ethAmount = web3.utils.toWei(amount, 'ether');
+    
     try {
-      
-      await contract.methods.split(
+
+      const success = await contract.methods.split(
         recipient1,
         recipient2
-      ).send({
-      from: accounts[0],
-      value: ethAmount,
-      // gas: "21000"
+      ).call({
+        from: accounts[0],
+        value: ethAmount
       })
-      // .once('receipt', (receipt) => {
-      //   this.setState({ loading: false})
-      // })
+
+      if (success) {
+        await contract.methods.split(
+          recipient1,
+          recipient2
+        ).send({
+        from: accounts[0],
+        value: ethAmount,
+        })
+        .on('transactionHash', (txHash) => {
+          this.setState({ txHash: txHash })
+        })
+        .on('receipt', (receipt) => {
+          this.setState({ txReceipt: receipt})
+          console.log(this.state.txReceipt.transactionHash)
+        });
+      }
     } catch(err) {
+      alert('Transaction unsuccessful.')
       console.log(err)
     }
   }
@@ -136,8 +152,28 @@ class App extends Component {
             onChange={this.handleInput}
           />
         </div>
+        <div class="alert alert-success" role="alert">
+          <p className="tx-hash-alert"><u>Transaction Hash</u>: {this.state.txHash}</p>
+        </div>
+        {/* <div>
+          <table className="tx-table" >
+            <tbody>
+              <tr>
+                <td>TX info </td>
+                <td>Values</td>
+              </tr>
+              <tr>
+                <td>Tx Hash: </td>
+                <td>{this.state.txHash}</td>
+              </tr>
+              <tr>
+                <td>Block #: </td>
+                <td>{ this.state.txReceipt.blockNumber }</td>
+              </tr>
+            </tbody>
+          </table>
+        </div> */}
         </form>
-
         <div className="buttons-container">
           <button 
           className="btn btn-primary"
@@ -160,7 +196,6 @@ class App extends Component {
             onChange={this.handleInput}
           />
         </div>
-
     </div>
     );
   }

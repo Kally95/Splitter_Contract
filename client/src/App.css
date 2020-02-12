@@ -71,3 +71,7 @@ h4 {
 .btn {
   margin-bottom: 10px;
 }
+
+.tx-hash-alert {
+  word-break: break-all;
+}
