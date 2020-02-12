@@ -62,8 +62,7 @@ class App extends Component {
     const ethAmount = web3.utils.toWei(amount, 'ether');
     
     try {
-
-      const success = await contract.methods.split(
+      const splitSuccess = await contract.methods.split(
         recipient1,
         recipient2
       ).call({
@@ -71,7 +70,7 @@ class App extends Component {
         value: ethAmount
       })
 
-      if (success) {
+      if (splitSuccess) {
         await contract.methods.split(
           recipient1,
           recipient2
@@ -79,16 +78,11 @@ class App extends Component {
         from: accounts[0],
         value: ethAmount,
         })
-        .on('transactionHash', (txHash) => {
-          this.setState({ txHash: txHash })
-        })
-        .on('receipt', (receipt) => {
-          this.setState({ txReceipt: receipt})
-          console.log(this.state.txReceipt.transactionHash)
-        });
+        .on('transactionHash', txHash => this.setState({ txHash: txHash }))
+        .on('receipt', receipt => this.setState({ txReceipt: receipt}))
       }
     } catch(err) {
-      alert('Transaction unsuccessful.')
+      alert('Split unsuccessful.')
       console.log(err)
     }
   }
@@ -96,13 +90,24 @@ class App extends Component {
   handleWithdraw = async () => {
     let { accounts, contract, web3, withdrawAmt } = this.state;
     let amount = web3.utils.toWei(withdrawAmt, "ether");
-    console.log(amount)
-    await contract.methods
+    try {
+      const withdrawSuccess = await contract.methods
       .withdraw(amount)
-      .send({
-      from: accounts[0],
-      gas: "21000"
+      .call({
+      from: accounts[0]
     });
+    if(withdrawSuccess)
+      await contract.methods
+        .withdraw(amount)
+        .send({
+        from: accounts[0]
+      })
+      .on('transactionHash', txHash => this.setState({ txHash: txHash }))
+      .on('receipt', receipt => this.setState({ txReceipt: receipt}))
+    } catch(err) {
+      alert('Withdraw Unsuccessful')
+      console.log(err)
+    }
   }
 
   handleContractBalance = async () => {
@@ -153,26 +158,8 @@ class App extends Component {
           />
         </div>
         <div class="alert alert-success" role="alert">
-          <p className="tx-hash-alert"><u>Transaction Hash</u>: {this.state.txHash}</p>
+          <p className="tx-hash-alert"><u>Withdraw Tx Hash</u>: {this.state.txHash}</p>
         </div>
-        {/* <div>
-          <table className="tx-table" >
-            <tbody>
-              <tr>
-                <td>TX info </td>
-                <td>Values</td>
-              </tr>
-              <tr>
-                <td>Tx Hash: </td>
-                <td>{this.state.txHash}</td>
-              </tr>
-              <tr>
-                <td>Block #: </td>
-                <td>{ this.state.txReceipt.blockNumber }</td>
-              </tr>
-            </tbody>
-          </table>
-        </div> */}
         </form>
         <div className="buttons-container">
           <button 
