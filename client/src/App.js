@@ -15,8 +15,7 @@ class App extends Component {
       amount: 0,
       recipient1: null,
       recipient2: null,
-      // recipient1Bal: 0,
-      // recipient2Bal:0,
+      txReceipt: '',
       withdrawAmt: 0,
       contractBal: 0
     }
@@ -61,6 +60,7 @@ class App extends Component {
     let { accounts, contract, recipient1, recipient2, amount, web3 } = this.state;
     const ethAmount = web3.utils.toWei(amount);
     try {
+      
       await contract.methods.split(
         recipient1,
         recipient2
