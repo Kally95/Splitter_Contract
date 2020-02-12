@@ -67,7 +67,7 @@ class App extends Component {
       ).send({
       from: accounts[0],
       value: ethAmount,
-      gas: "21000"
+      // gas: "21000"
       })
       // .once('receipt', (receipt) => {
       //   this.setState({ loading: false})
