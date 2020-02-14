@@ -11,12 +11,12 @@ contract("Splitter", (accounts) => {
   let contractInstance;
   
   beforeEach("Create new Splitter instance", async () => {
-    contractInstance = await Splitter.new({ from: accounts[0]});
+    contractInstance = await Splitter.new({ from: owner});
   });
 
   describe("Testing contract owner", function() {
     it("The deployer should be the Owwer", async () => {
-      const contractOwner = await contractInstance.getOwner({from: owner});
+      const contractOwner = await contractInstance.getOwner({from: accounts[3]});
       assert.strictEqual(contractOwner, owner, "Sender is not Owner");
     });
   });
@@ -33,11 +33,12 @@ contract("Splitter", (accounts) => {
 
     it("Split should fire an event when executed", async () => {
       const splitResult = await contractInstance.split(recipient1, recipient2, {from: owner, value: amount})
+      let splitLogs = splitResult.receipt.logs[0];
       assert.isTrue(splitResult.receipt.status, true, "Status is false");
-      assert.strictEqual(splitResult.receipt.logs[0].args.__length__, 4, "Two events should have been emitted");
-      assert.strictEqual(splitResult.receipt.logs[0].event, 'LogSplit', "Event 'Split' didn't fire");
-      assert.strictEqual(splitResult.receipt.logs[0].args.sender, owner, "Event 'Split' didn't fire");
-      assert.strictEqual(splitResult.receipt.logs[0].args.splitAmount.toString(10), "1000", "SplitAmount is incorrect");
+      assert.strictEqual(splitLogs.args.__length__, 4, "Two events should have been emitted");
+      assert.strictEqual(splitLogs.event, 'splitLogsplit', "Event 'Split' didn't fire");
+      assert.strictEqual(splitLogs.args.sender, owner, "Event 'Split' didn't fire");
+      assert.strictEqual(splitLogs.args.splitAmount.toString(10), "1000", "SplitAmount is incorrect");
     });
 
     it("Should not allow to Split 0x0 addresses", async () => {
@@ -97,8 +98,8 @@ contract("Splitter", (accounts) => {
     });
 
     it("Should not allow 0 value withdrawals", async () => {
-      const zeroBalance1 = await contractInstance.balances(recipient1, {from:owner});
-      const zeroBalance2 = await contractInstance.balances(recipient2, {from:owner});
+      await contractInstance.balances(recipient1, {from:owner});
+      await contractInstance.balances(recipient2, {from:owner});
       await utils.shouldThrow(contractInstance.withdraw("200", {from: recipient1}))
       await utils.shouldThrow(contractInstance.withdraw("200", {from: recipient2}))
     });
@@ -112,11 +113,12 @@ contract("Splitter", (accounts) => {
 
     it("Should emit an event when withdraw is called", async () => {
       await contractInstance.split(recipient1, recipient2, {from: owner, value: amount});
-      const result = await contractInstance.withdraw("499", {from: recipient1});
-      assert.strictEqual(result.receipt.logs[0].event, "LogWithdrawCalled", "Withdraw event did not fire");
-      assert.strictEqual(result.receipt.logs[0].args.__length__, 2, "Withdraw should have emitted one event");
-      assert.strictEqual(result.receipt.logs[0].args._withdrawer, recipient1, "recipient1 was not the withdrawer");
-      assert.strictEqual(result.receipt.logs[0].args._withdrawAmount.toString(10), "499", "Did not withdraw the correct amount");
+      const withdrawResult = await contractInstance.withdraw("499", {from: recipient1});
+      const withdrawLogs = withdrawResult.receipt.logs[0];
+      assert.strictEqual(withdrawLogs.event, "LogWithdrawCalled", "Withdraw event did not fire");
+      assert.strictEqual(withdrawLogs.args.__length__, 2, "Withdraw should have emitted one event");
+      assert.strictEqual(withdrawLogs.args._withdrawer, recipient1, "recipient1 was not the withdrawer");
+      assert.strictEqual(withdrawLogs.args._withdrawAmount.toString(10), "499", "Did not withdraw the correct amount");
     });
 
   });
