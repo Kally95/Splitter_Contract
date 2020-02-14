@@ -11,7 +11,8 @@ contract Splitter is Stoppable {
         address indexed sender,
         address indexed recipient,
         address indexed recipient2,
-        uint splitAmount
+        uint splitAmount,
+        uint splitRemainder
     );
 
     event LogWithdrawCalled(address indexed _withdrawer, uint indexed _withdrawAmount);
@@ -33,19 +34,18 @@ contract Splitter is Stoppable {
     whenAlive
     returns(bool)
     {
-      require(recipient1 != address(0x0) && recipient2 != address(0x0), "Error: Address cannot be 0");
-      require(msg.value > 0, "Error: Value can not equal 0");
-      require(recipient1 != recipient2);
-
-        if(msg.value % 2 != 0){
-            msg.value.sub(1);
-            balances[msg.sender] = balances[msg.sender].add(1); 
-        }
+        require(recipient1 != address(0x0) && recipient2 != address(0x0), "Error: Address cannot be 0");
+        require(msg.value > 0, "Error: Value can not equal 0");
+        require(recipient1 != recipient2);
 
         uint256 splitAmount = msg.value.div(2);
+        uint256 splitRemainder = msg.value.mod(2);
+
+        balances[msg.sender] = balances[msg.sender].add(splitRemainder);
         balances[recipient1] = balances[recipient1].add(splitAmount);
         balances[recipient2] = balances[recipient2].add(splitAmount); 
-        emit LogSplit(msg.sender, recipient1, recipient2, msg.value);
+
+        emit LogSplit(msg.sender, recipient1, recipient2, splitAmount, splitRemainder);
         return true;
     }
 
