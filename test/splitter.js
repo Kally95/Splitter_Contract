@@ -11,7 +11,7 @@ contract("Splitter", (accounts) => {
   let contractInstance;
   
   beforeEach("Create new Splitter instance", async () => {
-    contractInstance = await Splitter.new({ from: owner});
+    contractInstance = await Splitter.new({ from: accounts[0]});
   });
 
   describe("Testing contract owner", function() {
@@ -37,7 +37,7 @@ contract("Splitter", (accounts) => {
       assert.strictEqual(splitResult.receipt.logs[0].args.__length__, 4, "Two events should have been emitted");
       assert.strictEqual(splitResult.receipt.logs[0].event, 'LogSplit', "Event 'Split' didn't fire");
       assert.strictEqual(splitResult.receipt.logs[0].args.sender, owner, "Event 'Split' didn't fire");
-
+      assert.strictEqual(splitResult.receipt.logs[0].args.splitAmount.toString(10), "1000", "SplitAmount is incorrect");
     });
 
     it("Should not allow to Split 0x0 addresses", async () => {
