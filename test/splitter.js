@@ -34,7 +34,7 @@ contract("Splitter", (accounts) => {
     it("Split should fire an event when executed", async () => {
       const splitResult = await contractInstance.split(recipient1, recipient2, {from: owner, value: amount})
       assert.isTrue(splitResult.receipt.status, true, "Status is false");
-      assert.strictEqual(splitResult.receipt.logs[0].args.__length__, 1, "Two events should have been emitted");
+      assert.strictEqual(splitResult.receipt.logs[0].args.__length__, 4, "Two events should have been emitted");
       assert.strictEqual(splitResult.receipt.logs[0].event, 'LogSplit', "Event 'Split' didn't fire");
       assert.strictEqual(splitResult.receipt.logs[0].args.sender, owner, "Event 'Split' didn't fire");
 
@@ -145,7 +145,7 @@ contract("Splitter", (accounts) => {
       const tx = await web3.eth.getTransaction(hash); 
       const gasUsed = new BN(txObj.receipt.gasUsed);
       const gasPrice = new BN(tx.gasPrice);
-      const txFee = new BN(gasUsed * gasPrice);
+      const txFee = gasUsed.mul(gasPrice);
       const balanceNow = new BN(await web3.eth.getBalance(recipient1));        
       const receiveAmount = new BN(sendAmount / 2 );
 
