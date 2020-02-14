@@ -142,7 +142,7 @@ contract("Splitter", (accounts) => {
 
       const txObj = await contractInstance.withdraw("500", {from: recipient1})
 
-      assert.strictEqual(txObj.receipt.status, true, "withdraw event was not true");
+      assert.isTrue(txObj.receipt.status, "withdraw event was not true");
 
       const hash = txObj.receipt.transactionHash; 
       const tx = await web3.eth.getTransaction(hash); 
