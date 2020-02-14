@@ -73,7 +73,6 @@ contract Splitter is Stoppable {
         emit LogKilledWithdraw(msg.sender, address(this).balance);
         (bool success, ) = msg.sender.call.value(address(this).balance)("");
         require(success, "Error: Transfer failed.");
-        emit LogKilledWithdraw(msg.sender, address(this).balance);
     }
 
 }
