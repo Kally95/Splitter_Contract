@@ -84,13 +84,16 @@ contract("Splitter", (accounts) => {
 
   describe("Testing withdraw function", function() {
 
-    it("Should allow recipient1 and recipient2 to withdraw their split amount", async () => {
+    it("Should allow recipient1 to withdraw their split amount", async () => {
       await contractInstance.split(recipient1, recipient2, {from: owner, value: amount});
       const recipient1Withdraw = await contractInstance.withdraw("500", {from: recipient1});
-      const recipient2Withdraw = await contractInstance.withdraw("500", {from: recipient2});
+      assert.isTrue(recipient1Withdraw.receipt.status, "Status did not return true" );
+    });
 
-      assert.isTrue(recipient1Withdraw.receipt.status, true, "Status did not return true" );
-      assert.isTrue(recipient2Withdraw.receipt.status, true, "Status did not return true");
+    it("Should allow recipient2 to withdraw their split amount", async () => {
+      await contractInstance.split(recipient1, recipient2, {from: owner, value: amount});
+      const recipient2Withdraw = await contractInstance.withdraw("500", {from: recipient2});
+      assert.isTrue(recipient2Withdraw.receipt.status, "Status did not return true");
     });
 
     it("Should not allow 0 value withdrawals", async () => {
