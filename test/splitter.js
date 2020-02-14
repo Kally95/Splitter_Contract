@@ -47,8 +47,8 @@ contract("Splitter", (accounts) => {
     });
 
     it("Should not allow you to split value amount of 0", async () => {
-      await utils.shouldThrow(contractInstance.split(recipient1, {from: owner, value: 0}));
-      await utils.shouldThrow(contractInstance.split(recipient2, {from: owner, value: 0}));
+      await utils.shouldThrow(contractInstance.split(recipient1, recipient2, {from: owner, value: 0}));
+      await utils.shouldThrow(contractInstance.split(recipient2, recipient1, {from: owner, value: 0}));
     });
 
     it("Should not allow recipient1 to equal recipient2", async () => {
@@ -97,10 +97,8 @@ contract("Splitter", (accounts) => {
     });
 
     it("Should not allow 0 value withdrawals", async () => {
-      const zeroBalance1 = balanceBefore = await contractInstance.balances(recipient1, {from:owner});
+      const zeroBalance1 = await contractInstance.balances(recipient1, {from:owner});
       const zeroBalance2 = await contractInstance.balances(recipient2, {from:owner});
-      console.log(zeroBalance1.toString(10))
-      console.log(zeroBalance2.toString(10))
       await utils.shouldThrow(contractInstance.withdraw("200", {from: recipient1}))
       await utils.shouldThrow(contractInstance.withdraw("200", {from: recipient2}))
     });
