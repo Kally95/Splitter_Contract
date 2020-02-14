@@ -15,9 +15,9 @@ contract Splitter is Stoppable {
         uint splitRemainder
     );
 
-    event LogWithdrawCalled(address indexed _withdrawer, uint indexed _withdrawAmount);
+    event LogWithdrawCalled(address indexed withdrawer, uint indexed withdrawAmount);
 
-    event LogKilledWithdraw(address indexed _owner, uint indexed _contractAmount);
+    event LogKilledWithdraw(address indexed owner, uint indexed contractAmount);
 
     mapping(address => uint256) public balances;
 

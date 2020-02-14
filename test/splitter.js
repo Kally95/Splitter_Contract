@@ -117,8 +117,18 @@ contract("Splitter", (accounts) => {
       const withdrawLogs = withdrawResult.receipt.logs[0];
       assert.strictEqual(withdrawLogs.event, "LogWithdrawCalled", "Withdraw event did not fire");
       assert.strictEqual(withdrawLogs.args.__length__, 2, "Withdraw should have emitted one event");
-      assert.strictEqual(withdrawLogs.args._withdrawer, recipient1, "recipient1 was not the withdrawer");
-      assert.strictEqual(withdrawLogs.args._withdrawAmount.toString(10), "499", "Did not withdraw the correct amount");
+      assert.strictEqual(withdrawLogs.args.withdrawer, recipient1, "recipient1 was not the withdrawer");
+      assert.strictEqual(withdrawLogs.args.withdrawAmount.toString(10), "499", "Did not withdraw the correct amount");
+    });
+
+    it("Should test recipient1 receiving 2 splits before withdraw", async () => {
+      await contractInstance.split(recipient1, recipient2, {from: owner, value: amount});
+      await contractInstance.split(recipient1, recipient2, {from: owner, value: amount});
+      const twoSplitBalance = await contractInstance.balances(recipient1, {from: recipient1});
+      assert.strictEqual(twoSplitBalance.toString(10), "1000", "Balance after 2 Split's is incorrect");
+      const result = await contractInstance.withdraw("999", {from: recipient1});
+      assert.isTrue(result.receipt.status, "Status did not return true");
+      assert.strictEqual(result.receipt.logs[0].event, "LogWithdrawCalled", "Balance after 2 Split's is incorrect");
     });
 
   });
@@ -136,7 +146,7 @@ contract("Splitter", (accounts) => {
 
       const startBalance = new BN(await web3.eth.getBalance(recipient1));
 
-      const balanceBefore = await contractInstance.balances(recipient1, {from:owner});
+      // const balanceBefore = await contractInstance.balances(recipient1, {from:owner});
 
       const txObj = await contractInstance.withdraw("500", {from: recipient1})
 
