@@ -108,8 +108,6 @@ contract("Splitter", (accounts) => {
     it("Should not allow withdrawals greater than callers balance", async () => {
       await contractInstance.split(recipient1, recipient2, {from: owner, value: amount});
 
-      await contractInstance.balances(recipient1, {from: owner});
-
       await utils.shouldThrow(contractInstance.withdraw("501", {from: recipient1}));
       await utils.shouldThrow(contractInstance.withdraw("501", {from: recipient2}));
     });
@@ -136,9 +134,9 @@ contract("Splitter", (accounts) => {
 
       const sendAmount = 1000;
 
-      startBalance = new BN(await web3.eth.getBalance(recipient1));
+      const startBalance = new BN(await web3.eth.getBalance(recipient1));
 
-      balanceBefore = await contractInstance.balances(recipient1, {from:owner});
+      const balanceBefore = await contractInstance.balances(recipient1, {from:owner});
 
       const txObj = await contractInstance.withdraw("500", {from: recipient1})
 
