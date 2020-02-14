@@ -35,10 +35,10 @@ contract("Splitter", (accounts) => {
       const splitResult = await contractInstance.split(recipient1, recipient2, {from: owner, value: amount})
       let splitLogs = splitResult.receipt.logs[0];
       assert.isTrue(splitResult.receipt.status, true, "Status is false");
-      assert.strictEqual(splitLogs.args.__length__, 4, "Two events should have been emitted");
-      assert.strictEqual(splitLogs.event, 'splitLogsplit', "Event 'Split' didn't fire");
+      assert.strictEqual(splitLogs.args.__length__, 5, "Two events should have been emitted");
+      assert.strictEqual(splitLogs.event, 'LogSplit', "Event 'Split' didn't fire");
       assert.strictEqual(splitLogs.args.sender, owner, "Event 'Split' didn't fire");
-      assert.strictEqual(splitLogs.args.splitAmount.toString(10), "1000", "SplitAmount is incorrect");
+      assert.strictEqual(splitLogs.args.splitAmount.toString(10), "500", "SplitAmount is incorrect");
     });
 
     it("Should not allow to Split 0x0 addresses", async () => {
