@@ -59,9 +59,9 @@ contract Splitter is Stoppable {
         require(withdrawAmount != 0, "Error: Withdraw amount must be > 0");
         require(withdrawAmount <= balances[msg.sender], "Error: Insufficient balance");
         balances[msg.sender] = balance.sub(withdrawAmount);
+        emit LogWithdrawCalled(msg.sender, withdrawAmount);
         (bool success, ) = msg.sender.call.value(withdrawAmount)("");
         require(success, "Error: Transfer failed.");
-        emit LogWithdrawCalled(msg.sender, withdrawAmount);
     }
 
     function withdrawWhenKilled()
@@ -70,6 +70,7 @@ contract Splitter is Stoppable {
     onlyOwner
     {
         require(address(this).balance > 0, "Error: The contract is empty");
+        emit LogKilledWithdraw(msg.sender, address(this).balance);
         (bool success, ) = msg.sender.call.value(address(this).balance)("");
         require(success, "Error: Transfer failed.");
         emit LogKilledWithdraw(msg.sender, address(this).balance);
