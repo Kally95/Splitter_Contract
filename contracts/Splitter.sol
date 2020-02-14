@@ -7,7 +7,12 @@ contract Splitter is Stoppable {
 
     using SafeMath for uint256;
 
-    event LogSplit(address indexed sender);
+    event LogSplit(
+        address indexed sender,
+        address indexed recipient,
+        address indexed recipient2,
+        uint splitAmount
+    );
 
     event LogWithdrawCalled(address indexed _withdrawer, uint indexed _withdrawAmount);
 
@@ -40,7 +45,7 @@ contract Splitter is Stoppable {
         uint256 splitAmount = msg.value.div(2);
         balances[recipient1] = balances[recipient1].add(splitAmount);
         balances[recipient2] = balances[recipient2].add(splitAmount); 
-        emit LogSplit(msg.sender);
+        emit LogSplit(msg.sender, recipient1, recipient2, msg.value);
         return true;
     }
 
