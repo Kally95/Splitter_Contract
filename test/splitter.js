@@ -111,7 +111,7 @@ contract("Splitter", (accounts) => {
       await utils.shouldThrow(contractInstance.withdraw("501", {from: recipient2}));
     });
 
-    it("Should emit an event when withdraw is called", async () => {
+    it.only("Should emit an event when withdraw is called", async () => {
       await contractInstance.split(recipient1, recipient2, {from: owner, value: amount});
       const withdrawResult = await contractInstance.withdraw("499", {from: recipient1});
       const withdrawLogs = withdrawResult.receipt.logs[0];
