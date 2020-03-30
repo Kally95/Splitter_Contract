@@ -40,9 +40,7 @@ class App extends Component {
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ 
-        web3, accounts, contract: instance, address: deployedNetwork.address }, () => {
-        this.handleContractBalance();
-      });
+        web3, accounts, contract: instance, address: deployedNetwork.address }, this.handleContractBalance);
      
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -58,7 +56,7 @@ class App extends Component {
   };
 
   handleSplit = async () => {
-    let { accounts, contract, recipient1, recipient2, amount, web3 } = this.state;
+    const { accounts, contract, recipient1, recipient2, amount, web3 } = this.state;
     const ethAmount = web3.utils.toWei(amount, 'ether');
     
     try {
@@ -89,8 +87,8 @@ class App extends Component {
   }
 
   handleWithdraw = async () => {
-    let { accounts, contract, web3, withdrawAmt } = this.state;
-    let amount = web3.utils.toWei(withdrawAmt, "ether");
+    const { accounts, contract, web3, withdrawAmt } = this.state;
+    const amount = web3.utils.toWei(withdrawAmt, "ether");
     try {
       const withdrawSuccess = await contract.methods
       .withdraw(amount)
@@ -116,11 +114,11 @@ class App extends Component {
   }
 
   handleContractBalance = async () => {
-    let { web3, address } = this.state;
-    let balance = await web3.eth.getBalance(
+    const { web3, address } = this.state;
+    const balance = await web3.eth.getBalance(
       address
     );
-    let contractBalance = web3.utils.fromWei(balance, 'ether');
+    const contractBalance = web3.utils.fromWei(balance, 'ether');
     this.setState({ contractBal: contractBalance});
   }
   
