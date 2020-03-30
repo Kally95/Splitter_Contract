@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
 import "./Stoppable.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./SafeMath.sol";
 
 contract Splitter is Stoppable {
 
@@ -39,11 +39,15 @@ contract Splitter is Stoppable {
         require(recipient1 != recipient2);
 
         uint256 splitAmount = msg.value.div(2);
-        uint256 splitRemainder = msg.value.mod(2);
+        uint256 splitRemainder;
 
-        balances[msg.sender] = balances[msg.sender].add(splitRemainder);
+        if (msg.value % 2 != 0) {
+            splitRemainder = msg.value.mod(2);
+            balances[msg.sender] = balances[msg.sender].add(splitRemainder);
+        }
+        
         balances[recipient1] = balances[recipient1].add(splitAmount);
-        balances[recipient2] = balances[recipient2].add(splitAmount); 
+        balances[recipient2] = balances[recipient2].add(splitAmount);
 
         emit LogSplit(msg.sender, recipient1, recipient2, splitAmount, splitRemainder);
         return true;

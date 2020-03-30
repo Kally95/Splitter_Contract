@@ -80,10 +80,11 @@ class App extends Component {
         })
         .on('transactionHash', txHash => this.setState({ txHash: txHash }))
         .on('receipt', receipt => this.setState({ txReceipt: receipt}))
+      } else {
+        alert('Split unsuccessful.')
       }
     } catch(err) {
-      alert('Split unsuccessful.')
-      console.log(err)
+        console.log(err)
     }
   }
 
@@ -96,16 +97,20 @@ class App extends Component {
       .call({
       from: accounts[0]
     });
-    if(withdrawSuccess)
-      await contract.methods
-        .withdraw(amount)
-        .send({
-        from: accounts[0]
-      })
-      .on('transactionHash', txHash => this.setState({ txHash: txHash }))
-      .on('receipt', receipt => this.setState({ txReceipt: receipt}))
+
+      if(withdrawSuccess) {
+        await contract.methods
+          .withdraw(amount)
+          .send({
+          from: accounts[0]
+        })
+        .on('transactionHash', txHash => this.setState({ txHash: txHash }))
+        .on('receipt', receipt => this.setState({ txReceipt: receipt}))
+      } else {
+        alert('Withdraw Unsuccessful')
+      }
+      
     } catch(err) {
-      alert('Withdraw Unsuccessful')
       console.log(err)
     }
   }
