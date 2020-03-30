@@ -109,7 +109,7 @@ contract("Splitter", (accounts) => {
       await utils.shouldThrow(contractInstance.withdraw("501", {from: recipient2}));
     });
 
-    it.only("Should emit an event when withdraw is called", async () => {
+    it("Should emit an event when withdraw is called", async () => {
       const startingBalance =  await contractInstance.balances(recipient1, {from: recipient1});
       assert.strictEqual(startingBalance.toString(10), "0", "Starting balance is not 0")
 
@@ -149,7 +149,7 @@ contract("Splitter", (accounts) => {
       return contractInstance.split(recipient1, recipient2, {from: owner, value: sendAmount})
     }) 
 
-    it("Should split multiple amongst Recipient1 & Recipient2 with txFee's taken into consideration", async () => {
+    it.only("Should split multiple amongst Recipient1 & Recipient2 with txFee's taken into consideration", async () => {
 
       const sendAmount = 1000;
 
@@ -161,8 +161,7 @@ contract("Splitter", (accounts) => {
 
       assert.isTrue(txObj.receipt.status, "withdraw event was not true");
 
-      const hash = txObj.receipt.transactionHash; 
-      const tx = await web3.eth.getTransaction(hash); 
+      const tx = await web3.eth.getTransaction(txObj.receipt.transactionHash); 
       const gasUsed = new BN(txObj.receipt.gasUsed);
       const gasPrice = new BN(tx.gasPrice);
       const txFee = gasUsed.mul(gasPrice);
