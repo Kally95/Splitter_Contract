@@ -109,16 +109,24 @@ contract("Splitter", (accounts) => {
       await utils.shouldThrow(contractInstance.withdraw("501", {from: recipient2}));
     });
 
-    it("Should emit an event when withdraw is called", async () => {
-      await contractInstance.split(recipient1, recipient2, {from: owner, value: amount});
+    it.only("Should emit an event when withdraw is called", async () => {
+      const startingBalance =  await contractInstance.balances(recipient1, {from: recipient1});
+      assert.strictEqual(startingBalance.toString(10), "0", "Starting balance is not 0")
+
+      const splitResult = await contractInstance.split(recipient1, recipient2, {from: owner, value: amount});
+      assert.strictEqual(splitResult.logs[0].event, 'LogSplit', "Event 'Split' did't fire");
+
+      const balanceAfter = await contractInstance.balances(recipient1, {from: recipient1});
+      assert.strictEqual(balanceAfter.toString(10), "500", "Balance after Split is incorrect")
+
       const withdrawResult = await contractInstance.withdraw("499", {from: recipient1});
+      
       const withdrawLogs = withdrawResult.receipt.logs[0];
       assert.strictEqual(withdrawLogs.event, "LogWithdrawCalled", "Withdraw event did not fire");
       assert.strictEqual(withdrawLogs.args.__length__, 2, "Withdraw should have emitted one event");
       assert.strictEqual(withdrawLogs.args.withdrawer, recipient1, "recipient1 was not the withdrawer");
       assert.strictEqual(withdrawLogs.args.withdrawAmount.toString(10), "499", "Did not withdraw the correct amount");
 
-      // TO DO - ACCOUNT FOR SPLIT + WITHDRAWAL GAS FEE AND CHECK BAL BEFORE AND AFTER
     });
 
     it("Should test recipient1 receiving 2 splits before withdraw", async () => {
