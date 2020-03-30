@@ -43,7 +43,7 @@ contract("Splitter", (accounts) => {
 
     it("Should not allow to Split 0x0 addresses", async () => {
       await utils.shouldThrow(contractInstance.split(zeroAdd, recipient2, {from: owner, value: amount}));
-      await utils.shouldThrow(contractInstance.split(zeroAdd, zeroAdd, {from: owner, value: amount}));
+      await utils.shouldThrow(contractInstance.split(zerFoAdd, zeroAdd, {from: owner, value: amount}));
       await utils.shouldThrow(contractInstance.split(zeroAdd, recipient1, {from: owner, value: amount}));
     });
 
@@ -166,7 +166,7 @@ contract("Splitter", (accounts) => {
       const gasPrice = new BN(tx.gasPrice);
       const txFee = gasUsed.mul(gasPrice);
       const balanceNow = new BN(await web3.eth.getBalance(recipient1));        
-      const receiveAmount = new BN(sendAmount / 2 );
+      const receiveAmount = new BN(sendAmount).div(new BN(2));
 
       assert.strictEqual(balanceNow.toString(10), startBalance.add(receiveAmount).sub(txFee).toString(10), "recipient1's balance did not return as intended");
 
