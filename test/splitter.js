@@ -34,7 +34,7 @@ contract("Splitter", (accounts) => {
     it("Split should fire an event when executed", async () => {
       const splitResult = await contractInstance.split(recipient1, recipient2, {from: owner, value: amount})
       const splitLogs = splitResult.receipt.logs[0];
-      assert.isTrue(splitResult.receipt.status, true, "Status is false");
+      assert.isTrue(splitResult.receipt.status, "Status is false");
       assert.strictEqual(splitLogs.args.__length__, 5, "Two events should have been emitted");
       assert.strictEqual(splitLogs.event, 'LogSplit', "Event 'Split' didn't fire");
       assert.strictEqual(splitLogs.args.sender, owner, "Event 'Split' didn't fire");
