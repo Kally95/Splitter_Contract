@@ -39,11 +39,9 @@ contract Splitter is Stoppable {
         require(recipient1 != recipient2);
 
         uint256 splitAmount = msg.value.div(2);
-        uint256 splitRemainder;
 
         if (msg.value % 2 != 0) {
-            splitRemainder = msg.value.mod(2);
-            balances[msg.sender] = balances[msg.sender].add(splitRemainder);
+            balances[msg.sender] = balances[msg.sender].add(msg.value.mod(2););
         }
         
         balances[recipient1] = balances[recipient1].add(splitAmount);
