@@ -165,10 +165,13 @@ contract("Splitter", (accounts) => {
       const gasUsed = new BN(txObj.receipt.gasUsed);
       const gasPrice = new BN(tx.gasPrice);
       const txFee = gasUsed.mul(gasPrice);
-      const balanceNow = new BN(await web3.eth.getBalance(recipient1));        
+      const balanceNow = await web3.eth.getBalance(recipient1);        
       const receiveAmount = new BN(sendAmount).div(new BN(2));
 
-      assert.strictEqual(balanceNow.toString(10), startBalance.add(receiveAmount).sub(txFee).toString(10), "recipient1's balance did not return as intended");
+      assert.strictEqual(
+        balanceNow.toString(10),
+        startBalance.add(receiveAmount).sub(txFee).toString(10),
+        "recipient1's balance did not return as intended");
 
     });
 
